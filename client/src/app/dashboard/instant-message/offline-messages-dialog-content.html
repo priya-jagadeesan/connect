@@ -1,0 +1,17 @@
+<div class='dialog-head rounded'>
+  <h2 mat-dialog-title class='dialog-title p-2'>While you were away,</h2>
+  <mat-dialog-content class='rounded '>
+    <h6 class="text-secondary ml-2">New messages from:</h6>
+    <div class="dialog-content">
+      <ul class="list-group list-group-flush" *ngFor="let user of data">
+        <li class="list-group-item">
+          <span class="text-info">{{ user.user_name }}</span>
+          <button [mat-dialog-close]="user" class="btn btn-primary pull-right"> view </button>
+        </li>
+      </ul>
+    </div>
+  </mat-dialog-content>
+</div>
+<mat-dialog-actions class="pull-right">
+  <button mat-dialog-close="Ok" class="btn btn-danger" cdkFocusInitial>Close</button>
+</mat-dialog-actions>

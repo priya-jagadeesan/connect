@@ -1,0 +1,31 @@
+<div class='dialog-head rounded' style="height: 90%">
+    <h2 class="dialog-title p-2" mat-dialog-title>Add New Friends</h2>
+    <mat-dialog-content>
+        <div class="dialog-content">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item" *ngIf="data.addFriends.length == 0 && data.addFriends_error">
+                    <span class="small text-danger font-weight-bold">{{ data.addFriends_error }}</span>
+                </li>
+                <li class="list-group-item" *ngIf="data.addFriends.length == 0 && !data.addFriends_error">
+                    <span class="text-primary">No new users</span>
+                </li>
+                <li class="list-group-item" *ngFor="let friend of data.addFriends">
+                    <!-- <p class="text-primary">{{ friend['name'] }} </p>
+                    <p class="text-info">{{ friend['email'] }} </p> -->
+                    <div class="span4">
+                        <img class="profileImage" *ngIf="friend['image']" [src]="friend['image']['changingThisBreaksApplicationSecurity']" alt='profilpicture'>
+                        <img class="profileImage" *ngIf="!friend['image']" src="./../../assets/user.png" alt='profilpicture'>
+                        <div class="content-heading">
+                            <h3>{{ friend['name'] }} </h3>
+                            <button [mat-dialog-close]="friend" class="btn btn-primary pull-right"> Add </button>
+                        </div>
+                        <p>{{ friend['email'] }}</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </mat-dialog-content>
+</div>
+<mat-dialog-actions class="pull-right">
+    <button mat-dialog-close="cancel" class="btn btn-danger" cdkFocusInitial>Cancel</button>
+</mat-dialog-actions>

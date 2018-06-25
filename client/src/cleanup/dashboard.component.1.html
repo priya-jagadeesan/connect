@@ -1,0 +1,166 @@
+<div class="wrapper orange" *ngIf='isLoggedIn'>
+  <nav id="sidebar">
+    <!-- sidebar buttons -->
+    <div class="p-1 splColor sticky-top">
+      <!-- <div class="p-1 sidebar-header splColor sticky-top"> -->
+      <button class="btn btn-link ">
+        <img class="rounded" src="./../../assets/user.png" width="16" height="16">
+      </button>
+      <button class="btn btn-link splColor" (click)="addFriends()">Add friends</button>
+      <button class="btn btn-link splColor" *ngIf="!room" (click)="chatRoom()">Chat-Room</button>
+      <button class="btn btn-link splColor" *ngIf="room" (click)="room = false">Go back</button>
+      <button class="btn btn-link pull-right splColor" (click)="logOut()">Log out</button>
+    </div>
+    <!-- sidebar new message alert -->
+    <div class="m-1 text-center orange" *ngIf="newChat && chatID">
+      <button class="btn btn-link" (click)="viewNewMessage(chatID, chatFrom)">You got a new Message: {{ chatFrom | lowercase }}</button>
+    </div>
+    <!-- sidebar new chat room message alert -->
+    <div class="m-1 text-center orange" *ngIf="newChatRoom && chatRoomID">
+      <button class="btn btn-link" (click)="chatRoom()">New Chat Room conversation</button>
+    </div>
+    <!-- user friends list -->
+    <div *ngIf="friends && !room" class="card" [ngClass]="{ list: '!listScroll', listFlow: 'listScroll' }">
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item" (click)="showMessages(friend)" *ngFor="let friend of friends">
+          <button class="btn btn-link">
+            <img class="rounded pull-left" src="./../../assets/user.png" width="16" height="16">
+          </button>
+          <span class="btn text-primary">{{ friend['name'] }}</span>
+          <span class="btn text-success pull-right" *ngIf="friend['active']">
+            <fa-icon class="text-success" [icon]="['fas', 'circle']" size="1x"></fa-icon>
+          </span>
+          <span class="btn text-success pull-right" *ngIf="!friend['active']">
+            <fa-icon class="text-danger" [icon]="['fas', 'circle']" size="1x"></fa-icon>
+          </span>
+        </li>
+      </ul>
+    </div>
+    <!-- chat room users list -->
+    <!-- [ngClass]={ list: showEmojis,"fixed: !showEmojis}"   -->
+    <div *ngIf="room && users" class="card" [ngClass]="{ list: '!listScroll', listFlow: 'listScroll' }">
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item" *ngFor="let user of users">
+          <button class="btn btn-link">
+            <img class="rounded pull-left" src="./../../assets/user.png" width="16" height="16">
+          </button>
+          <span class="btn text-secondary" style="cursor: default">{{ user['name'] }}</span>
+          <span class="btn text-success pull-right" *ngIf="user['active']">
+            <fa-icon class="text-success" [icon]="['fas', 'circle']" size="1x"></fa-icon>
+          </span>
+          <span class="btn text-success pull-right" *ngIf="!user['active']">
+            <fa-icon class="text-danger" [icon]="['fas', 'circle']" size="1x"></fa-icon>
+          </span>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <!-- main content container -->
+  <div class="container orange-half">
+    <!-- user welcome container -->
+    <div class="jumbotron welcome text-center" *ngIf="!friend_id && !room">
+      <h1 class="text-secondary">{{ user_name | uppercase }}</h1>
+      <h4 class="text-info">welcome</h4>
+    </div>
+    <!-- user friend chats -->
+    <div class="row" *ngIf="friend_id && !room">
+      <!-- user friend name -->
+      <div class="col-lg-12 p-0">
+        <div class="splColor sticky-top">
+          <h4 class="p-2 text-center border">
+            {{ friend_name | uppercase }}
+          </h4>
+        </div>
+        <!-- user friend messages -->
+        <ul class="list-group list-group-flush fixed" #scrollMessages>
+          <li class="list-group-item" *ngFor="let message of messages">
+            <div *ngIf="message._from != user_id">
+              <p class="eachMessage text-left text-success" style="margin-left: 30px;">
+                <span class="text-secondary text-left">{{ friend_name }}: </span>
+                <span class="text-justify">{{ message.content }}</span>
+              </p>
+              <!-- <span class="small text-left text-default"> {{ message.time }}</span> -->
+            </div>
+            <div *ngIf="message._from == user_id">
+              <p class="eachMessage text-right text-danger" style="margin-left: 300px;">
+                <span class="text-secondary text-right">You: </span>
+                <span class="text-justify">{{ message.content }}</span>
+              </p>
+              <!-- <span class="small text-right text-default"> {{ message.time }}</span> -->
+            </div>
+          </li>
+        </ul>
+      </div>
+      <!-- user friend emojis -->
+      <div class="col-lg-12 p-0 orange-qt" *ngIf="seeEmojis">
+        <emoji-mart color='#f4511e' set="apple" native=true hideRecent=true showPreview=false (emojiSelect)="appendEmoji($event)"
+          title="Pick your emoji" emoji='point_up' perLine=15>
+        </emoji-mart>
+      </div>
+      <!-- user friend NEW message input area -->
+      <div class="col-lg-12">
+        <!-- loginForm -->
+        <form class="form-inline" (submit)="sendMessage()">
+          <div class="form-group">
+            <input id='newMsg' type="text" class="form-control text-center" name="newMessage.content" [(ngModel)]="newMessage.content"
+              size="70" placeholder="" required>
+          </div>
+          <div class="ml-4 form-group text-center">
+              <span class="btn pull-left" style="font-size: 2em" (click)="seeEmoji()">😀</span>
+            <input type="submit" class="btn btn-danger pull-right" value="Send">
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- chat room html -->
+    <div class="row" *ngIf="room && !friend_id">
+      <!-- chat room messages -->
+      <div class="col-lg-12 p-0">
+        <!-- [ngClass]="{ fixedEmoji: showEmojis, fixed: !showEmojis}"  -->
+        <div class="splColor sticky-top">
+          <h4 class="p-2 text-center border">
+            Chat Room
+          </h4>
+        </div>
+        <ul class="list-group list-group-flush fixed" #scrollMe>
+          <li class="list-group-item" *ngFor="let message of CR_messages">
+            <div *ngIf="message.from != user_name">
+              <p class="eachMessage text-left text-success" style="margin-left: 30px;">
+                <span class="text-secondary">{{ message.from }}: </span>
+                <span class="text-justify">{{ message.content }}</span>
+              </p>
+            </div>
+            <div *ngIf="message.from == user_name">
+              <p class="eachMessage text-right text-danger" style="margin-left: 300px;">
+                <span class="text-secondary">You: </span>
+                <span class="text-justify">{{ message.content }}</span>
+              </p>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <!-- chat room emojis -->
+      <div class="col-lg-12 p-0 orange-qt" *ngIf="showEmojis">
+        <emoji-mart color='#f4511e' set="apple" native=true hideRecent=true showPreview=false (emojiSelect)="addEmoji($event)" title="Pick your emoji"
+          emoji='point_up' perLine=15>
+        </emoji-mart>
+      </div>
+      <!-- chat room NEW message input area -->
+      <div class="col-lg-12">
+        <form class="form-inline" (submit)="CR_sendMessage()">
+          <!-- loginForm -->
+          <!-- <div class="form-group"> -->
+          <textarea id='text' class="message text-secondary" name="CR_newMessage.content" [(ngModel)]="CR_newMessage.content" size="100"
+            placeholder="" required></textarea>
+          <!-- <input type="text" class="form-control text-center" name="CR_newMessage.content" [(ngModel)]="CR_newMessage.content" size="70"
+              placeholder="" required> -->
+          <!-- </div> -->
+          <!-- <div class="ml-4 form-group text-center"> -->
+              <span class="btn pull-left" style="font-size: 2em" (click)="showEmoji()">😀</span>
+          <input type="submit" class="ml-4 btn btn-danger pull-right" value="Send">
+          <!-- </div> -->
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,105 @@
+<div class="ng-background"></div>
+<div class="wrap">
+  <section class="left">
+    <div class="action" data-toggle="tooltip" data-placement="bottom" title="Click to upload">
+      <input (click)='changProfileImage()' class="profileImage" type="image" *ngIf="profileImage" [src]="profileImage['changingThisBreaksApplicationSecurity']"
+        alt="profile" width="30" height="30">
+      <input (click)='changProfileImage()' class="profileImage" type="image" *ngIf="!profileImage" src="./../../assets/user.png"
+        alt="profile" width="30" height="30">
+      <button class="btn btn-link" (click)="addFriends()">Add friends</button>
+      <button class="btn btn-link" *ngIf="!room" (click)="chatRoom()">Chat-Room</button>
+      <button class="btn btn-link pull-right" (click)="logOut()">Log out</button>
+    </div>
+    <div class="wrap-alert" *ngIf="newChat && chatID">
+      <div class="alert bg-success" (click)="viewNewMessage(chatID, chatFrom, chatFriendStatus)">
+        <!-- <i class="fa fa-search fa" aria-hidden="true"></i> -->
+        <!-- <input type="text" class="input-search" placeholder="search"> -->
+        You got a new Message: {{ chatFrom | lowercase }}
+      </div>
+    </div>
+    <div class="wrap-alert" *ngIf="newChatRoom && chatRoomID">
+      <div class="alert bg-info" (click)="chatRoom()">
+        New Chat Room conversation
+      </div>
+    </div>
+    <div class="contact-list">
+      <div *ngFor="let friend of friends">
+        <div (click)="showMessages(friend)" class='contact new-message-contact'>
+          <img class="profileImage" *ngIf="friend['image']" [src]="friend['image']['changingThisBreaksApplicationSecurity']" alt='profilpicture'>
+          <img class="profileImage" *ngIf="!friend['image']" src="./../../assets/user.png" alt='profilpicture'>
+          <div class='contact-preview'>
+            <div class='contact-text'>
+              <h1 class='user-name'>{{ friend['name'] }}</h1>
+              <p class='user-preview'></p>
+            </div>
+          </div>
+          <div class='contact-time'>
+            <p></p>
+            <div class='new-message' *ngIf="friend['active']">
+              <p></p>
+            </div>
+            <div class='new-message bg-danger' *ngIf="!friend['active']">
+              <p></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="right" #emojiSize>
+    <div *ngIf="!friend_id && !room">
+      <div class="chat-head">
+        <h1 class="user-name"></h1>
+        <p class="user-online"></p>
+      </div>
+      <div class="welcome text-center">
+        <div>
+          <h1 class="text-secondary">{{ user_name | uppercase }}</h1>
+          <h4 class="text-info">welcome</h4>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="friend_id && !room" style="height: 100%">
+      <div class="chat-head">
+        <img class="profileImage" *ngIf="friend_image" [src]="friend_image['changingThisBreaksApplicationSecurity']" alt='profilpicture'>
+        <img class="profileImage" *ngIf="!friend_image" src="./../../assets/user.png" alt='profilpicture'>
+        <div class="chat-name">
+          <h3 class="text-left mb-0">{{ friend_name }}</h3>
+          <p *ngIf="friend_active" class="user-online">Online</p>
+          <p *ngIf="!friend_active" class="user-online">Offline</p>
+        </div>
+      </div>
+      <div [ngClass]="{'wrap-chat1': !seeEmojis, 'wrap-chat2': seeEmojis}" #scrollMessages>
+        <div class="chat" *ngFor="let message of messages">
+          <div class='chat-bubble you' *ngIf="message._from != user_id">
+            <div class='your-mouth'></div>
+            <div class='content'>{{ message.content }}</div>
+            <div class='time'>{{ message.time }}</div>
+          </div>
+          <div class='chat-bubble me' *ngIf="message._from == user_id">
+            <div class='my-mouth'></div>
+            <div class='content'>{{ message.content }}</div>
+            <div class='time'>{{ message.time }}</div>
+          </div>
+        </div>
+        <div class="information"></div>
+      </div>
+      <div class="wrap-emoji" *ngIf="seeEmojis">
+        <div style="margin: 10px 8%;">
+          <emoji-mart color='#f4511e' set="apple" native=true hideRecent=true showPreview=false (emojiSelect)="appendEmoji($event)"
+            title="Pick your emoji" emoji='point_up' [perLine]='count'>
+          </emoji-mart>
+        </div>
+      </div>
+      <div class="wrap-message">
+        <i class="fa fa-smile-o fa-lg" aria-hidden="true" (click)="seeEmoji()"></i>
+        <div class="message">
+          <input id='newMsg' type="text" class="input-message" name="newMessage.content" [(ngModel)]="newMessage.content" size="70"
+            placeholder="" required (keyup.enter)="sendMessage()">
+        </div>
+        <i class="fa fa-paper-plane fa-lg" aria-hidden="true" (click)="sendMessage()"></i>
+      </div>
+    </div>
+  </section>
+</div>

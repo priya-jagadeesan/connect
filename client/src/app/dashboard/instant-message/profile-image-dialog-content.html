@@ -1,0 +1,18 @@
+<div class='dialog-head rounded'>
+    <h2 class="dialog-title p-2" mat-dialog-title>Change Profile image</h2>
+    <mat-dialog-content>
+        <div class="text-center bg-form">
+            <div class="img-section">
+                <img *ngIf="imageSrc" [src]='imageSrc' class="img-thumbnail" alt="Profile picture" width="150" height="150">
+                <img *ngIf="!imageSrc && !data.image" src="./../../assets/user.png" class="img-thumbnail" alt="Profile picture" width="150" height="150"> 
+                <img *ngIf="!imageSrc && data.image" [src]="data.image['changingThisBreaksApplicationSecurity']" class="img-thumbnail" alt="Profile picture" width="150" height="150">
+            </div>
+            <input style='display: none' (change)="fileUpload($event)" id="input-file-id" type="file" accept="image/*" />
+            <label for="input-file-id" class="mt-4 btn btn-primary" style="width: 30%">Upload</label>
+        </div>
+    </mat-dialog-content>
+</div>
+<mat-dialog-actions class="pull-right">
+    <button [mat-dialog-close]="profileImage" class="btn text-primary" >Save</button>
+    <button mat-dialog-close="cancel" class="btn text-primary" cdkFocusInitial>Cancel</button>
+</mat-dialog-actions>

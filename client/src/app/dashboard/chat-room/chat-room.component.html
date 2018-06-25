@@ -1,0 +1,83 @@
+<div class="ng-background"></div>
+<div class="wrap">
+  <section class="left">
+    <div class="action">
+     <img class="profileImage" *ngIf="profileImage" [src]="profileImage['changingThisBreaksApplicationSecurity']"
+        alt="profile" width="30" height="30">
+      <img class="profileImage" *ngIf="!profileImage" src="./../../assets/user.png" alt="profile"
+        width="30" height="30">
+      <button class="btn btn-link" *ngIf="!room" (click)="goBack()">Go back</button>
+      <button class="btn btn-link pull-right" (click)="logOut()">Log out</button>
+    </div>
+    <div class="wrap-alert" *ngIf="chatFrom && chatID">
+      <div class="alert bg-success" (click)="goBack()">
+          You got a new Message: {{ chatFrom | lowercase }}
+      </div>
+    </div>
+    <div class="contact-list">
+      <div *ngFor="let user of users">
+        <div class='contact new-message-contact' style='cursor: default; background-color: #ffffff;'>
+          <img class="profileImage" *ngIf="user['image']" [src]="user['image']['changingThisBreaksApplicationSecurity']"
+            alt="profile" width="30" height="30">
+          <img class="profileImage" *ngIf="!user['image']" src="./../../assets/user.png" alt="profile"
+            width="30" height="30">
+          <div class='contact-preview'>
+            <div class='contact-text'>
+              <h1 class='user-name'>{{ user['name'] }}</h1>
+              <p class='user-preview'></p>
+            </div>
+          </div>
+          <div class='contact-time'>
+            <p></p>
+            <div class='new-message' *ngIf="user['active']">
+              <p></p>
+            </div>
+            <div class='new-message bg-danger' *ngIf="!user['active']">
+              <p></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="right" #emojiSize>
+    <div style="height: 100%">
+      <div class="chat-head">
+        <div class="chat-name">
+          <h3 class="text-center">Chat Room</h3>
+        </div>
+      </div>
+      <div [ngClass]="{'wrap-chat1': !seeEmojis, 'wrap-chat2': seeEmojis}" #scrollMessages>
+        <div class="chat" *ngFor="let message of CR_messages">
+          <div class='chat-bubble you' *ngIf="message.from != user_name">
+            <div class='your-mouth'></div>
+            <div class='content'><b>{{ message.from }}:</b> {{ message.content }}</div>
+            <div class='time'>{{ message.time }}</div>
+          </div>
+          <div class='chat-bubble me' *ngIf="message.from == user_name">
+            <div class='my-mouth'></div>
+            <div class='content'><b>{{ message.from }}:</b> {{ message.content }}</div>
+            <div class='time'>{{ message.time }}</div>
+          </div>
+        </div>
+        <div class="information"></div>
+      </div>
+      <div class="wrap-emoji" *ngIf="seeEmojis">
+        <div style="margin: 10px 8%;">
+          <emoji-mart color='#f4511e' set="apple" native=true hideRecent=true showPreview=false (emojiSelect)="appendEmoji($event)"
+            title="Pick your emoji" emoji='point_up' [perLine]='count'>
+          </emoji-mart>
+        </div>
+      </div>
+      <div class="wrap-message">
+        <i class="fa fa-smile-o fa-lg" aria-hidden="true" (click)="seeEmoji()"></i>
+        <div class="message">
+          <input id='newMsg' type="text" class="input-message" name="CR_newMessage.content" [(ngModel)]="CR_newMessage.content" size="70"
+            placeholder="" required (keyup.enter)="sendMessage()">
+        </div>
+        <i class="fa fa-paper-plane fa-lg" aria-hidden="true" (click)="sendMessage()"></i>
+      </div>
+    </div>
+  </section>
+</div>

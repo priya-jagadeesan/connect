@@ -1,0 +1,11 @@
+<!-- if user not logged in show login or register html -->
+<app-login 
+    *ngIf='!isLoggedIn' 
+    (userLogIn)="userLogIn($event)">
+</app-login>
+
+<!-- if user logged in show dashboard html -->
+<app-dashboard 
+    *ngIf='isLoggedIn' 
+    (userLogOut)="userLogOut($event)">
+</app-dashboard>

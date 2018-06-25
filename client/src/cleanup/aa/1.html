@@ -1,0 +1,46 @@
+<!-- login component form  -->
+<form #myForm="ngForm" class="form-horizontal loginForm" (submit)="onSubmit()" *ngIf="joinOrLogin">
+  <pre>
+        {{myForm.value | json}}
+      </pre>
+  <div class="col-sm-6 form-group">
+    <input type="text" class="form-control text-center" name="user.name" [(ngModel)]="user.name" size="50" placeholder="your name"
+      required>
+  </div>
+  <div class="col-sm-6 form-group">
+    <input type="email" class="form-control text-center" name="user.email" [(ngModel)]="user.email" size="50" placeholder="example@example.com"
+      required>
+  </div>
+  <div class="col-sm-6 form-group">
+    <input type="password" class="form-control text-center" name="user.password" [(ngModel)]="user.password" size="50" placeholder="password"
+      required>
+  </div>
+  <div class="col-sm-6 form-group text-right ml-4">
+    <input type="submit" class="btn btn-danger" value="Join" [disabled]="!myForm.form.valid">
+    <button class="col-sm-6 btn btn-link" (click)="login()">Login</button>
+  </div>
+</form>
+
+<!-- Dashboard add new friends  -->
+<div *ngIf="newFriends.length == 0 && add">
+  <div class="card list">
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">
+        <span class="text-primary"> No new members </span>
+      </li>
+    </ul>
+  </div>
+</div>
+<div *ngIf="newFriends && add">
+  <div class="card list">
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item" *ngFor="let friend of newFriends">
+        <img class="pull-left" src="./../../assets/user.png" width="16" height="16">
+        <span class="text-primary">{{ friend['name'] }} | {{ friend['email'] }} </span>
+        <button class="btn btn-link text-primary pull-right" (click)="newFriend(friend)"> Add </button>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- ngx-odinvt-emoji-mart.js -->

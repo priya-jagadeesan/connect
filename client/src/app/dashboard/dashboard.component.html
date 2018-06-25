@@ -1,0 +1,12 @@
+<app-instant-message *ngIf='IM && !CR' 
+    (userLogOut)="userLogOutGB($event)" 
+    (chatRoomEnable)="chatRoomEnable($event)"
+    (newMsgAlert)="newMsgAlert($event)">
+</app-instant-message>
+
+<app-chat-room *ngIf='!IM && CR' 
+    (userLogOut)="userLogOutGB($event)" 
+    [active_users]="active_users" 
+    [newMsgA]="newMsg" 
+    (chatRoomDisable)="chatRoomDisable($event)">
+</app-chat-room>

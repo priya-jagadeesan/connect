@@ -1,0 +1,56 @@
+/* You can add global styles to this file, and also import other style files */
+@import "~bootstrap/dist/css/bootstrap.min.css";
+@import "~font-awesome/css/font-awesome.min.css";
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+
+*{
+    font-family: 'Roboto', sans-serif;
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+body{
+    height: 100%;
+}
+
+.jumbotron {
+    /* background-color: #f4511e; */
+    background: #E23137;
+    color: #fff;
+    height: 100px;
+    padding: 10px;
+    margin-bottom: 0px;
+    border: 1px solid #E23137;
+}
+
+.loginForm{
+    padding: 20px;
+}
+
+.footer {
+    padding: 30px;
+    text-align: center;
+    margin-top: 100px;
+    background-color: white;
+}
+
+.text-wrap{
+    width: 200px;
+    margin: 0px 70px;
+    /* word-wrap: break-word; */
+}
+
+.dialog-head{
+    border: 1px solid #E23137;
+}
+
+.dialog-title{
+    background-color: #E23137;
+    color: white;
+}
+
+.dialog-content{
+    height: 200px;
+    overflow: scroll;
+}
