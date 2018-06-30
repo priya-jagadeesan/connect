@@ -4,81 +4,123 @@
   <p>keep in touch</p>
 </div>
 <!-- Join or Login Form -->
-<div class="row" *ngIf='!isLoggedIn'>
-  <div class="col-lg-4"></div>
-  <div class="col-lg-8">
-    <!-- Joining form -->
-    <form #joinForm="ngForm" class="form-horizontal loginForm" *ngIf="joinOrLogin" novalidate (ngSubmit)="onSubmit(joinForm,'join')">
-      <div class="col-sm-6 form-group">
-        <input type="text" class="form-control text-center" [ngModel]="user.name" name="name" #name="ngModel" placeholder="your name"
-          autocomplete="name" required minlength="5" maxlength="10">
-          <span class="small ml-1 mt-4 text-secondary" *ngIf="!user_errors.name && !(name.dirty || name.touched)">*only alphanumeric characters</span>
-          <span class="small ml-1 mt-4 text-danger" *ngIf="user_errors.name">only alphanumeric characters</span>
-        <p class="small text-danger" *ngIf="name.invalid && (name.dirty || name.touched)">
-          <span class="ml-1 mt-4" *ngIf="name?.errors && name?.errors['required']">User name required</span>
-          <span class="ml-1 mt-4" *ngIf="name?.errors && name?.errors['minlength']">User name needs to be more than 5 characters</span>
-          <span class="ml-1 mt-4" *ngIf="name?.errors && name?.errors['maxlength']">Choose User name within 8 characters</span>
-        </p>
-        <!-- <p class="small text-danger" *ngIf="user_errors.name">
-          <span class="ml-1 mt-4" *ngIf="user_errors.name">{{ user_errors.name }}</span>
-        </p> -->
+<div class="container text-center" *ngIf='!isLoggedIn'>
+  <div class='row'>
+    <div class="col-lg-3"></div>
+    <div id="loginbox" style="margin-top:50px;" class="mainbox col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2">
+      <div class="card border" *ngIf="!joinOrLogin">
+        <div class="card-header">
+          <div class="card-title">Sign In</div>
+        </div>
+        <div style="padding-top:30px" class="card-body">
+          <div style="display:none" id="login-alert" class="alert alert-danger col-lg-12"></div>
+          <form #loginForm="ngForm" class="form-horizontal" novalidate (ngSubmit)="onSubmit(loginForm,'login')">
+            <!-- Login form -->
+            <p class="small text-danger" *ngIf="login_errors">
+              <span class="ml-1 mt-4 font-weight-bold" *ngIf="login_errors">{{ login_errors }}</span>
+            </p>
+            <div class="input-group">
+              <input type="text" class="form-control text-center" [ngModel]="user.name" name="name" #name="ngModel" placeholder="your name"
+                autocomplete="name" required minlength="5">
+            </div>
+            <div style="margin-bottom: 25px">
+              <p class="small text-danger" *ngIf="name.invalid && (name.dirty || name.touched)">
+                <span class="ml-1 mt-4" *ngIf="name?.errors && name?.errors['required']">User name required</span>
+                <span class="ml-1 mt-4" *ngIf="name?.errors && name?.errors['minlength']">User name is more than 5 characters</span>
+              </p>
+            </div>
+            <div class="input-group">
+              <input type="password" class="form-control text-center" [ngModel]="user.password" name="password" #password="ngModel" placeholder="password"
+                autocomplete="password" required minlength="6">
+            </div>
+            <div style="margin-bottom: 25px">
+              <p class="small text-danger" *ngIf="password.invalid && (password.dirty || password.touched)">
+                <span class="ml-1 mt-4" *ngIf="password?.errors && password?.errors['required']">Password required</span>
+                <span class="ml-1 mt-4" *ngIf="password?.errors && password?.errors['minlength']">Password is more than 6 characters</span>
+              </p>
+            </div>
+            <div class="form-group">
+              <div class="col-sm-12 controls">
+                <input type="submit" class="btn btn-danger" value="Login" [disabled]="!loginForm.form.valid">
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="col-md-12 control">
+                <div style="border-top: 1px solid#888; padding-top:15px; font-size:85%">
+                  Don't have an account!
+                  <button class="btn btn-link text-left" (click)="login()">Register</button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
       </div>
-      <div class="col-sm-6 form-group">
-        <input type="email" class="form-control text-center" [ngModel]="user.email" name="email" #email="ngModel" placeholder="email address"
-          autocomplete="email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$">
-        <p class="small text-danger" *ngIf="email.invalid && (email.dirty || email.touched)">
-          <span class="ml-1 mt-4" *ngIf="email?.errors && email?.errors['required']">Email address required</span>
-          <span class="ml-1 mt-4" *ngIf="email?.errors && email?.errors['pattern']">Invalid email address</span>
-        </p>
-        <p class="small text-danger" *ngIf="user_errors.email">
-          <span class="ml-1 mt-4" *ngIf="user_errors.email">{{ user_errors.email }}</span>
-        </p>
+      <div class="card border" *ngIf="joinOrLogin">
+        <div class="card-header">
+          <div class="card-title">Sign Up</div>
+        </div>
+        <div class="card-body">
+          <form #joinForm="ngForm" class="form-horizontal" novalidate (ngSubmit)="onSubmit(joinForm,'join')">
+            <div class="input-group">
+              <input type="email" class="form-control text-center" [ngModel]="user.email" name="email" #email="ngModel" placeholder="email address"
+                autocomplete="email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$">
+            </div>
+            <div style="margin-bottom: 25px">
+              <p class="small text-danger" *ngIf="email.invalid && (email.dirty || email.touched)">
+                <span class="ml-1 mt-4" *ngIf="email?.errors && email?.errors['required']">Email address required</span>
+                <span class="ml-1 mt-4" *ngIf="email?.errors && email?.errors['pattern']">Invalid email address</span>
+              </p>
+              <p class="small text-danger" *ngIf="user_errors.email">
+                <span class="ml-1 mt-4" *ngIf="user_errors.email">{{ user_errors.email }}</span>
+              </p>
+            </div>
+            <div class="input-group">
+              <input type="text" class="form-control text-center" [ngModel]="user.name" name="name" #name="ngModel" placeholder="your name"
+                autocomplete="name" required minlength="5" maxlength="10">
+            </div>
+            <div style="margin-bottom: 25px">
+              <span class="small ml-1 mt-4 text-secondary" *ngIf="!user_errors.name && !(name.dirty || name.touched)">*only alphanumeric characters</span>
+              <span class="small ml-1 mt-4 text-danger" *ngIf="user_errors.name">only alphanumeric characters</span>
+              <p class="small text-danger" *ngIf="name.invalid && (name.dirty || name.touched)">
+                <span class="ml-1 mt-4" *ngIf="name?.errors && name?.errors['required']">User name required</span>
+                <span class="ml-1 mt-4" *ngIf="name?.errors && name?.errors['minlength']">User name needs to be more than 5 characters</span>
+                <span class="ml-1 mt-4" *ngIf="name?.errors && name?.errors['maxlength']">Choose User name within 8 characters</span>
+              </p>
+            </div>
+            <div class="input-group">
+              <input type="password" class="form-control text-center" [ngModel]="user.password" name="password" #password="ngModel" placeholder="password"
+                autocomplete="password" required minlength="6">
+            </div>
+            <div style="margin-bottom: 25px">
+              <p class="small text-danger" *ngIf="password.invalid && (password.dirty || password.touched)">
+                <span class="ml-1 mt-4" *ngIf="password?.errors && password?.errors['required']">Password required</span>
+                <span class="ml-1 mt-4" *ngIf="password?.errors && password?.errors['minlength']">Password needs to be more than 6 characters</span>
+              </p>
+              <p class="small text-danger" *ngIf="user_errors.password">
+                <span class="ml-1 mt-4" *ngIf="user_errors.password">{{ user_errors.password }}</span>
+              </p>
+            </div>
+
+            <div style="margin-top:10px" class="form-group">
+                <div class="col-sm-12 controls">
+                    <input type="submit" class="btn btn-danger" value="Join" [disabled]="!joinForm.form.valid">
+                  </div>
+              </div>
+            <div class="form-group">
+              <div class="col-md-12 control">
+                <div style="border-top: 1px solid#888; padding-top:15px; font-size:85%">
+                  Already have an account!
+                  <button class="btn btn-link text-left" (click)="login()">Login</button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
       </div>
-      <div class="col-sm-6 form-group">
-        <input type="password" class="form-control text-center" [ngModel]="user.password" name="password" #password="ngModel" placeholder="password"
-          autocomplete="password" required minlength="6">
-        <p class="small text-danger" *ngIf="password.invalid && (password.dirty || password.touched)">
-          <span class="ml-1 mt-4" *ngIf="password?.errors && password?.errors['required']">Password required</span>
-          <span class="ml-1 mt-4" *ngIf="password?.errors && password?.errors['minlength']">Password needs to be more than 6 characters</span>
-        </p>
-        <p class="small text-danger" *ngIf="user_errors.password">
-          <span class="ml-1 mt-4" *ngIf="user_errors.password">{{ user_errors.password }}</span>
-        </p>
-      </div>
-      <div class="col-sm-6 form-group btn-center">
-        <input type="submit" class="btn btn-danger" value="Join" [disabled]="!joinForm.form.valid">
-        <button class="col-sm-6 btn btn-link" (click)="login()">Login</button>
-      </div>
-    </form>
-    <!-- Login form -->
-    <form #loginForm="ngForm" class="form-horizontal loginForm" *ngIf="!joinOrLogin" novalidate (ngSubmit)="onSubmit(loginForm,'login')">
-      <div class="col-sm-6 form-group">
-        <p class="small text-danger" *ngIf="login_errors">
-          <span class="ml-1 mt-4 font-weight-bold" *ngIf="login_errors">{{ login_errors }}</span>
-        </p>
-        <input type="text" class="form-control text-center" [ngModel]="user.name" name="name" #name="ngModel" placeholder="your name"
-          autocomplete="name" required minlength="5">
-        <p class="small text-danger" *ngIf="name.invalid && (name.dirty || name.touched)">
-          <span class="ml-1 mt-4" *ngIf="name?.errors && name?.errors['required']">User name required</span>
-          <span class="ml-1 mt-4" *ngIf="name?.errors && name?.errors['minlength']">User name is more than 5 characters</span>
-        </p>
-      </div>
-      <div class="col-sm-6 form-group">
-        <input type="password" class="form-control text-center" [ngModel]="user.password" name="password" #password="ngModel" placeholder="password"
-          autocomplete="password" required minlength="6">
-        <p class="small text-danger" *ngIf="password.invalid && (password.dirty || password.touched)">
-          <span class="ml-1 mt-4" *ngIf="password?.errors && password?.errors['required']">Password required</span>
-          <span class="ml-1 mt-4" *ngIf="password?.errors && password?.errors['minlength']">Password is more than 6 characters</span>
-        </p>
-      </div>
-      <!-- <div class="col-sm-6 form-group text-right ml-4"></div> -->
-      <div class="col-sm-6 form-group btn-center">
-        <input type="submit" class="btn btn-danger" value="Login" [disabled]="!loginForm.form.valid">
-        <button class="col-sm-6 btn btn-link" (click)="login()">Join</button>
-      </div>
-    </form>
+    </div>
   </div>
 </div>
+
 <!-- Features footer container -->
 <div class="container footer" *ngIf='!isLoggedIn'>
   <div class="row">
